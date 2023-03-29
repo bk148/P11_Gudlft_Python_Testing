@@ -20,7 +20,7 @@ class TestShowSummary:
         WHEN un mail invalid est entrée
         THEN l'utilisateur reçois un message d'erreur et reste sur la page 'index.htm'
         """
-        invalid_email = 'wrongMail@club.com'
+        invalid_email = 'errorgMail@club.com'
         response = client.post('/showSummary', data={"email": invalid_email})
         assert response.data.decode()
         assert 'message' in response.data.decode()
