@@ -1,15 +1,17 @@
-from tests.unit_tests.conftest import client
+from tests.unit_tests.conftest import client, info_clubs
 
 
 class TestShowSummary:
 
-    def test_valid_email_should_return_welcome_page(self, client):
+    def test_valid_email_should_return_welcome_page(self, client, info_clubs):
         """
         GIVEN email du club
         WHEN un mail valid est entrée
         THEN l'utilisateur accède avec succès à la page 'welcome.html'
         """
-        valid_email = 'john@simplylift.co'
+        club_email = info_clubs
+        valid_email = club_email['email']
+
         response = client.post('/showSummary', data={'email': valid_email})
         assert response.status_code == 200
         assert valid_email in response.data.decode()
