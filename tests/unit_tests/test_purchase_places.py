@@ -19,9 +19,9 @@ class TestPurchasesPlace:
 
     def test_invalid_points_should_return_error_message_redirect_to_book_html(self, client, info_clubs, info_comp):
         """
-        GIVEN point invalide pour rediriger vers 'book.html'
+        GIVEN point invalide redirection vers 'book.html'
         WHEN l'utilisateur entre des points invalide
-        THEN l'utilisateur, il est redirigé vers book.html
+        THEN l'utilisateur, est redirigé vers book.html
 
         """
         club = info_clubs['name']
