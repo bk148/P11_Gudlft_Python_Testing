@@ -1,4 +1,4 @@
-from utilis import read
+from utilis import change, points_mis_a_jour
 from flask import Flask, render_template, request, redirect, flash, url_for
 
 
@@ -7,8 +7,8 @@ def create_app(config):
     app.secret_key = "something_special"
     app.config.from_object(config)
 
-    competitions = read('competitions.json', 'competitions')
-    clubs = read('clubs.json', 'clubs')
+    competitions = change('competitions.json', 'competitions')
+    clubs = change('clubs.json', 'clubs')
 
     @app.route('/')
     def index():
@@ -43,13 +43,22 @@ def create_app(config):
         placesRequired = int(request.form['places'])
 
         # verifier que les points sont valides
-        if placesRequired < 0 or placesRequired > int(club['points']):
-            flash("vous ne pouvez pas entrer un nombre négatif")
+        if placesRequired < 0 or placesRequired > int(club['points']) or placesRequired > int(
+                competition['numberOfPlaces']):
+            flash("vous devez saisir un nombre de point valide")
             return redirect(url_for('book', club=club['name'], competition=competition['name']))
         else:
             # Mise à jour des places de competition et du club
             competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
             club['points'] = int(club['points']) - placesRequired
+
+            # Les places sont competition.json et clubs.json sont correctement mise à jour
+            points_mis_a_jour(
+                points=str(club['points']),
+                places=str(competition['numberOfPlaces']),
+                id_club=clubs.index(club),
+                id_comp=competitions.index(competition)
+            )
             flash('Great-booking complete!')
             return render_template('welcome.html', club=club, competitions=competitions)
 
