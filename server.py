@@ -1,4 +1,4 @@
-from utilis import change, points_mis_a_jour
+from utilis import change, points_mis_a_jour, past_competition_updated
 from flask import Flask, render_template, request, redirect, flash, url_for
 
 
@@ -18,7 +18,8 @@ def create_app(config):
     def showSummary():
         try:
             club = [club for club in clubs if club['email'] == request.form['email']][0]
-            return render_template('welcome.html', club=club, competitions=competitions)
+            competitions_upd = past_competition_updated(competitions)
+            return render_template('welcome.html', club=club, competitions=competitions_upd)
         except IndexError:
             message = "Cette adresse mail n'existe pas"
             return render_template('index.html', message=message)
