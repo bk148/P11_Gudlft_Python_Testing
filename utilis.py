@@ -21,6 +21,7 @@ def points_mis_a_jour(points: str, places: str, id_club: int, id_comp=int):
         data['competitions'][id_comp]['numberOfPlaces'] = places
         json.dump(data, open('competitions.json', 'w'), indent=4)
 
+
 def past_competition_updated(competitions: list) -> list:
     past_comp = []
     date_format = "%Y-%m-%d %H:%M:%S"
