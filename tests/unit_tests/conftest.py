@@ -21,4 +21,11 @@ def info_comp():
     return data_competition
 
 
+@pytest.fixture
+def test_past_comp():
+    return {
+        "name": "Fall Classic",
+        "date": "2020-10-22 13:30:00",
+        "numberOfPlaces": "13"
+    }
 
