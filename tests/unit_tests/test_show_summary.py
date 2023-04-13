@@ -1,16 +1,35 @@
-from tests.unit_tests.conftest import client, info_clubs, test_past_comp
+from tests.unit_tests.conftest import client, app, info_comp, info_club, captured_templates
 
 
 class TestShowSummary:
 
-    def test_shouldnt_book_past_competition(self, client, info_clubs, test_past_comp):
-        """
-        Given: A secretary wishes to book a number of places for a competition
-        When: They book a number of places on a competition that has happened in the past
-        Then:  They should not be able to book a place on a post-dated competition
-        (but past competitions should be visible).
-        """
+    club = info_club()[0]
+    past_comp = info_comp()[0]
 
-        response = client.post('/showSummary', data={'email': info_clubs['email']})
+    def test_valid_email_should_return_welcome_page(self, client, captured_templates):
+        """
+        GIVEN email du club
+        WHEN un mail valid est entrée
+        THEN l'utilisateur accède avec succès à la page 'welcome.html'
+        """
+        valid_email = self.club["email"]
+        response = client.post('/showSummary', data={'email': valid_email})
         assert response.status_code == 200
-        assert test_past_comp['name'] in response.data.decode() and "Past competition" in response.data.decode()
+        assert len(captured_templates) == 1
+        template, context = captured_templates[0]
+        assert template.name == "welcome.html"
+        assert valid_email in response.data.decode()
+
+    def test_invalid_email_should_return_index_html_with_errorMessage(self, client, captured_templates):
+        """
+        GIVEN email du club
+        WHEN un mail invalid est entrée
+        THEN l'utilisateur reçois un message d'erreur et reste sur la page 'index.htm'
+        """
+        invalid_email = 'invalid@simplylift.com'
+        response = client.post('/showSummary', data={'email': invalid_email}, follow_redirects=True)
+        assert response.status_code == 200
+        assert len(captured_templates) == 1
+        template, context = captured_templates[0]
+        assert template.name == "index.html"
+        assert 'error' in response.data.decode()

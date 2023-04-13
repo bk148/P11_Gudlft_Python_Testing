@@ -38,7 +38,16 @@ def past_competition_updated(competitions: list) -> list:
     return past_comp
 
 
+def check_points(placesRequired: int, comp: dict, club: dict) -> bool:
+    # If club has already reserved 12 places on competition:
+    if int(club['reservations'][comp['name']]) >= 12:
+        return False
 
-
-
-
+    # If places required are not in interval 0 - 12
+    # or places required * 3 is greater than club's points
+    # or places required greater than nb of places left
+    if not 0 < placesRequired <= 12 or placesRequired * 3 > int(club['points']) or placesRequired > int(
+            comp['numberOfPlaces']):
+        return False
+    else:
+        return True

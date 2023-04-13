@@ -1,31 +1,86 @@
 import pytest
+import server
+from flask import template_rendered
 from server import create_app
 
 
+def info_club():
+    return [
+        {
+            "name": "Simply Lift",
+            "email": "john@simplylift.co",
+            "points": "30",
+            "reservations": {
+                "Spring Festival": "0",
+                "Fall Classic": "0",
+                "Summer Festival 2022": "0"
+            }
+        },
+        {
+            "name": "Iron Temple",
+            "email": "admin@irontemple.com",
+            "points": "4",
+            "reservations": {
+                "Spring Festival": "0",
+                "Fall Classic": "0",
+                "Summer Festival 2022": "0"
+            }
+        },
+        {
+            "name": "She Lifts",
+            "email": "kate@shelifts.co.uk",
+            "points": "12",
+            "reservations": {
+                "Spring Festival": "0",
+                "Fall Classic": "0",
+                "Summer Festival 2022": "0"
+            }
+        }
+    ]
+
+
+def info_comp():
+    return [
+        {
+            "name": "Spring Festival",
+            "date": "2020-03-27 10:00:00",
+            "numberOfPlaces": "20"
+        },
+        {
+            "name": "Fall Classic",
+            "date": "2020-10-22 13:30:00",
+            "numberOfPlaces": "13"
+        },
+        {
+            "name": "Summer Festival 2022",
+            "date": "2022-06-22 13:30:00",
+            "numberOfPlaces": "23"
+        }
+    ]
+
+
 @pytest.fixture
-def client():
-    app = create_app({"TESTING": True})
+def app(mocker):
+    mocker.patch.object(server, "COMPETITIONS", info_comp())
+    mocker.patch.object(server, "CLUBS", info_club())
+    return create_app({"TESTING": True})
+
+
+@pytest.fixture
+def client(app):
     with app.test_client() as client:
         yield client
 
 
 @pytest.fixture
-def info_clubs():
-    data_clubs = {"name": "Simply Lift", "email": "john@simplylift.co", "points": 11, "zeroPoint": 0}
-    return data_clubs
+def captured_templates(app):
+    recorded = []
 
+    def record(sender, template, context, **extra):
+        recorded.append((template, context))
 
-@pytest.fixture
-def info_comp():
-    data_competition = {"name": "Spring Festival", "date": "2020-03-27 10:00:00", "numberOfPlaces": 25}
-    return data_competition
-
-
-@pytest.fixture
-def test_past_comp():
-    return {
-        "name": "Fall Classic",
-        "date": "2020-10-22 13:30:00",
-        "numberOfPlaces": "13"
-    }
-
+    template_rendered.connect(record, app)
+    try:
+        yield recorded
+    finally:
+        template_rendered.disconnect(record, app)
