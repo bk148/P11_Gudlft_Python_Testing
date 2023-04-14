@@ -1,6 +1,3 @@
-from tests.unit_tests.conftest import client, app, captured_templates
-
-
 class TestPurchasesPlace:
 
     @staticmethod

@@ -1,4 +1,4 @@
-from tests.unit_tests.conftest import client, app, info_comp, info_club, captured_templates
+from tests.conftest import info_comp, info_club
 
 
 class TestShowSummary:
@@ -26,7 +26,7 @@ class TestShowSummary:
         WHEN un mail invalid est entrée
         THEN l'utilisateur reçois un message d'erreur et reste sur la page 'index.htm'
         """
-        invalid_email = 'invalid@simplylift.com'
+        invalid_email = 'wrong@email.com'
         response = client.post('/showSummary', data={'email': invalid_email}, follow_redirects=True)
         assert response.status_code == 200
         assert len(captured_templates) == 1

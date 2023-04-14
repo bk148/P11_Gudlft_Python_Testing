@@ -1,6 +1,3 @@
-from tests.unit_tests.conftest import client, app, captured_templates
-
-
 def test_login_index_route_return_index_page(client, captured_templates):
     """
     GET request to '/' should return index page.

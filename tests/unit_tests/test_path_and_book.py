@@ -1,4 +1,4 @@
-from tests.unit_tests.conftest import client, app, info_comp, info_club, captured_templates
+from tests.conftest import info_comp, info_club
 
 
 class Test_Path_Booking:

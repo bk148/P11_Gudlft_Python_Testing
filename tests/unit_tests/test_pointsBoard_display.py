@@ -1,4 +1,4 @@
-from tests.unit_tests.conftest import client, app, captured_templates, info_club
+from tests.conftest import info_club
 
 
 def test_get_Board_page_should_display_board_html(client, captured_templates):
