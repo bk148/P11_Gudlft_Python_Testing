@@ -1,12 +1,8 @@
-import os
 import pytest
 import server
 from flask import template_rendered
 from server import create_app
 
-
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-CHROME_DRIVER_PATH = os.path.join(ROOT_DIR, '../chromedriver.exe')
 
 def info_club():
     return [

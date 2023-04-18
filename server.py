@@ -8,7 +8,7 @@ CLUBS = change('clubs.json', 'clubs')
 
 def create_app(config):
     app = Flask(__name__)
-    app.secret_key = "something_special"
+    app.secret_key = 'something_special'
     app.config.from_object(config)
     competitions = COMPETITIONS
     clubs = CLUBS
